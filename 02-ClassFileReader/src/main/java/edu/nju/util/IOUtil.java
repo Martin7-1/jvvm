@@ -1,7 +1,10 @@
-package edu.nju;
+package edu.nju.util;
 
 import java.io.*;
 
+/**
+ * @author Zyi
+ */
 public class IOUtil {
     public static byte[] readFileByBytes(InputStream is) throws IOException {
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {

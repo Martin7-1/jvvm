@@ -1,12 +1,13 @@
-package edu.nju;
+package edu.nju.entry;
 
 import java.io.IOException;
 
 /**
- * format : dir/.../*
+ * format : dir/subdir/.../
+ * @author Zyi
  */
-public class WildEntry extends Entry{
-    public WildEntry(String classpath) {
+public class DirEntry extends Entry {
+    public DirEntry(String classpath) {
         super(classpath);
     }
 

@@ -1,12 +1,13 @@
-package edu.nju;
+package edu.nju.entry;
 
 import java.io.IOException;
 
 /**
- * format : dir/subdir/target.jar
+ * format : dir/subdir;dir/subdir/*;dir/target.jar*
+ * @author Zyi
  */
-public class ArchivedEntry extends Entry{
-    public ArchivedEntry(String classpath) {
+public class CompositeEntry extends Entry {
+    public CompositeEntry(String classpath) {
         super(classpath);
     }
 
