@@ -4,6 +4,7 @@ import edu.nju.util.IOUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
@@ -18,7 +19,12 @@ public class DirEntry extends Entry {
     @Override
     public byte[] readClassFile(String className) throws IOException {
         String newClasspath = IOUtil.transform(classpath);
-        FileInputStream fileInputStream = new FileInputStream(newClasspath + FILE_SEPARATOR + className);
+        FileInputStream fileInputStream;
+        try {
+            fileInputStream = new FileInputStream(newClasspath + FILE_SEPARATOR + className);
+        } catch (FileNotFoundException e) {
+            return null;
+        }
 
         return IOUtil.readFileByBytes(fileInputStream);
     }

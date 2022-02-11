@@ -50,7 +50,7 @@ public class ClassFileReader {
      * @param className format: /package/.../class
      * @return content of classfile
      */
-    public static byte[] readClassFile(String classpath,String className) throws ClassNotFoundException{
+    public static byte[] readClassFile(String classpath,String className) throws ClassNotFoundException {
         className = IOUtil.transform(className);
         className += ".class";
         bootStrapReader = chooseEntryType(classpath);

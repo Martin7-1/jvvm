@@ -1,6 +1,11 @@
 package edu.nju.entry;
 
+import edu.nju.util.IOUtil;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * format : dir/subdir/target.jar
@@ -13,6 +18,14 @@ public class ArchivedEntry extends Entry {
 
     @Override
     public byte[] readClassFile(String className) throws IOException {
-        return null;
+        String newClasspath = IOUtil.transform(this.classpath);
+        FileInputStream fileInputStream;
+        try {
+            fileInputStream = new FileInputStream(newClasspath + FILE_SEPARATOR + className);
+        } catch (FileNotFoundException e) {
+            return null;
+        }
+
+        return IOUtil.readFileByBytes(fileInputStream);
     }
 }

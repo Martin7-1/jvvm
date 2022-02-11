@@ -12,10 +12,10 @@ public class ClassFileReaderTest {
     private static final String OBJECT = "java/lang/Object";
     private static final String BASE_PATH = String.join(FILE_SEPARATOR,"src", "test", "testfilepath");
 
-    private boolean readClass(String classpath,String expectedName){
+    private boolean readClass(String classpath, String expectedName){
         byte[] res;
         try {
-            res = ClassFileReader.readClassFile(classpath,expectedName);
+            res = ClassFileReader.readClassFile(classpath, expectedName);
         } catch (ClassNotFoundException e) {
             return false;
         }
@@ -23,6 +23,8 @@ public class ClassFileReaderTest {
         assert res != null;
         ClassFile classFile = new ClassFile(res);
         String realName = classFile.getClassName();
+        System.out.println(realName);
+        System.out.println(expectedName);
         return realName.equals(expectedName);
     }
 
@@ -44,17 +46,17 @@ public class ClassFileReaderTest {
 
     @Test
     public void testDirFail(){
-        assertFalse(readClass(String.join(FILE_SEPARATOR,BASE_PATH,"dir","subdir"), OBJECT));
+        assertFalse(readClass(String.join(FILE_SEPARATOR,BASE_PATH, "dir", "subdir"), OBJECT));
     }
 
     @Test
     public void testArchivedSuccess(){
-        assertTrue(readClass(String.join(FILE_SEPARATOR,BASE_PATH,"dir","subdir","rt.JAR"),OBJECT));
+        assertTrue(readClass(String.join(FILE_SEPARATOR,BASE_PATH, "dir", "subdir", "rt.JAR"), OBJECT));
     }
 
     @Test
     public void testArchivedFail(){
-        assertFalse(readClass(String.join(FILE_SEPARATOR,BASE_PATH,"dir","subdir","empty.jar"),OBJECT));
+        assertFalse(readClass(String.join(FILE_SEPARATOR,BASE_PATH, "dir", "subdir", "empty.jar"), OBJECT));
     }
 
     @Test
