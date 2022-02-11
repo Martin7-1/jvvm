@@ -51,6 +51,9 @@ public class ClassFileReader {
      * @return content of classfile
      */
     public static byte[] readClassFile(String classpath,String className) throws ClassNotFoundException {
+        if (classpath == null || className == null) {
+            throw new ClassNotFoundException();
+        }
         className = IOUtil.transform(className);
         className += ".class";
         bootStrapReader = chooseEntryType(classpath);

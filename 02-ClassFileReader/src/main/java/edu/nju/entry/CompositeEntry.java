@@ -19,9 +19,10 @@ public class CompositeEntry extends Entry {
 
     @Override
     public byte[] readClassFile(String className) throws IOException {
+        if (classpath == null || className == null) {
+            return null;
+        }
         String[] paths = getPath();
-
-        StringBuilder res = new StringBuilder();
         byte[] temp;
 
         for (String path : paths) {
@@ -29,21 +30,21 @@ public class CompositeEntry extends Entry {
                 temp = new ArchivedEntry(path).readClassFile(className);
                 if (temp != null) {
                     // 注意这里的temp默认是UTF-8编码的，否则需要在构造String的时候指定编码
-                    res.append(new String(temp));
+                    return temp;
                 }
             } else if (path.contains("*")) {
                 temp = new WildEntry(path).readClassFile(className);
                 if (temp != null) {
-                    res.append(new String(temp));
+                    return temp;
                 }
             } else {
                 temp = new DirEntry(path).readClassFile(className);
                 if (temp != null) {
-                    res.append(new String(temp));
+                    return temp;
                 }
             }
         }
 
-        return res.toString().getBytes(StandardCharsets.UTF_8);
+        return null;
     }
 }

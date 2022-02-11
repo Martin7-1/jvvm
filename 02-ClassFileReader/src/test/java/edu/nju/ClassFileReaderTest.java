@@ -5,6 +5,7 @@ import seec.test.util.classfileparser.ClassFile;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.util.Arrays;
 
 public class ClassFileReaderTest {
     public static final String PATH_SEPARATOR = File.pathSeparator;
@@ -23,8 +24,6 @@ public class ClassFileReaderTest {
         assert res != null;
         ClassFile classFile = new ClassFile(res);
         String realName = classFile.getClassName();
-        System.out.println(realName);
-        System.out.println(expectedName);
         return realName.equals(expectedName);
     }
 

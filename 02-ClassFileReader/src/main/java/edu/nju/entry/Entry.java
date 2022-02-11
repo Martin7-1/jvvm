@@ -12,5 +12,11 @@ public abstract class Entry {
         this.classpath = classpath;
     }
 
+    /**
+     * 根据classpath和classname来读取文件内容
+     * @param className 类名
+     * @return 类的内容
+     * @throws IOException IO异常
+     */
     public abstract byte[] readClassFile(String className) throws IOException;
 }

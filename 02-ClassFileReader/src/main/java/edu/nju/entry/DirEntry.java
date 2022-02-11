@@ -2,10 +2,7 @@ package edu.nju.entry;
 
 import edu.nju.util.IOUtil;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * format : dir/subdir/.../
@@ -18,8 +15,11 @@ public class DirEntry extends Entry {
 
     @Override
     public byte[] readClassFile(String className) throws IOException {
+        if (classpath == null || className == null) {
+            return null;
+        }
         String newClasspath = IOUtil.transform(classpath);
-        FileInputStream fileInputStream;
+        InputStream fileInputStream;
         try {
             fileInputStream = new FileInputStream(newClasspath + FILE_SEPARATOR + className);
         } catch (FileNotFoundException e) {

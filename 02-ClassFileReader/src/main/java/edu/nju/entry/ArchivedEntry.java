@@ -6,6 +6,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Enumeration;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * format : dir/subdir/target.jar
@@ -18,11 +21,26 @@ public class ArchivedEntry extends Entry {
 
     @Override
     public byte[] readClassFile(String className) throws IOException {
+        if (classpath == null || className == null) {
+            return null;
+        }
         String newClasspath = IOUtil.transform(this.classpath);
-        FileInputStream fileInputStream;
-        try {
-            fileInputStream = new FileInputStream(newClasspath + FILE_SEPARATOR + className);
-        } catch (FileNotFoundException e) {
+        // 获取jar文件
+        JarFile jarFile = new JarFile(newClasspath);
+        // 获得jar文件的一个迭代器
+        Enumeration<JarEntry> enumeration = jarFile.entries();
+        InputStream fileInputStream = null;
+
+        while (enumeration.hasMoreElements()) {
+            JarEntry jarEntry = enumeration.nextElement();
+            String name = jarEntry.getName().replace('/', '\\');
+            if (name.equals(className)) {
+                fileInputStream = jarFile.getInputStream(jarEntry);
+                break;
+            }
+        }
+
+        if (fileInputStream == null) {
             return null;
         }
 

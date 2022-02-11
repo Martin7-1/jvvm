@@ -16,6 +16,9 @@ public class WildEntry extends Entry {
 
     @Override
     public byte[] readClassFile(String className) throws IOException {
+        if (classpath == null || className == null) {
+            return null;
+        }
         // 不需要递归考虑
         String newClasspath = IOUtil.transform(this.classpath);
         // 去掉通配符和通配符前面的路径分隔符
