@@ -1,5 +1,9 @@
 package edu.nju.entry;
 
+import edu.nju.util.IOUtil;
+
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 /**
@@ -13,6 +17,9 @@ public class DirEntry extends Entry {
 
     @Override
     public byte[] readClassFile(String className) throws IOException {
-        return null;
+        String newClasspath = IOUtil.transform(classpath);
+        FileInputStream fileInputStream = new FileInputStream(newClasspath + FILE_SEPARATOR + className);
+
+        return IOUtil.readFileByBytes(fileInputStream);
     }
 }
