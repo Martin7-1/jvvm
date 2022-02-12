@@ -12,11 +12,6 @@ import java.nio.ByteBuffer;
  */
 @Getter
 public class UTF8Info extends ConstantPoolInfo {
-
-    private int length;
-    private byte[] bytes;
-    private String myString;
-
     /**
      * Add some codes here.
      *
@@ -36,13 +31,25 @@ public class UTF8Info extends ConstantPoolInfo {
      *      return a Pair<UTF8Info,Integer> or get the length of string in UTF8Info?
      *
      */
-    // todo attributes of UTF8Info
 
+    /**
+     * todo attributes of UTF8Info
+     */
+    private int length;
+    private byte[] bytes;
+    private String myString;
 
-    // todo constructor of UTF8Info
+    /**
+     * todo constructor of UTF8Info
+     * @param constantPool 常量池
+     * @param length UTF8中的bytes数组的长度
+     * @param bytes 字符串值
+     */
     public UTF8Info(ConstantPool constantPool, int length, byte[] bytes){
         super(constantPool);
-
+        this.length = length;
+        this.bytes = bytes;
+        super.tag = ConstantPoolInfo.UTF8;
     }
 
     /**
@@ -54,8 +61,11 @@ public class UTF8Info extends ConstantPoolInfo {
         return null;
     }
 
-    // todo return string
+    /**
+     * todo return string
+     * @return string
+     */
     public String getString() {
-        return "";
+        return this.myString;
     }
 }

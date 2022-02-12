@@ -101,7 +101,15 @@ public class ConstantPoolInfo {
                  * todo complete the missing code of UTF8Info
                  * Add some codes here.
                  */
-                ret = null;
+                int length = in.getU2();
+                byte[] bytes = new byte[length];
+                for (int i = 0; i < length; i++) {
+                    // 从缓冲区获取一个byte
+                    bytes[i] = in.getByteBuffer().get();
+                }
+                ret = new UTF8Info(constantPool, in.getU2(), bytes);
+                bytesRead += 2;
+                bytesRead += length;
                 break;
             }
 

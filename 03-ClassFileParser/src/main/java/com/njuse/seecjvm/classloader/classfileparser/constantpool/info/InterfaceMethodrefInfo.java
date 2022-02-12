@@ -14,11 +14,13 @@ public class InterfaceMethodrefInfo extends MemberRefInfo {
         super.tag = ConstantPoolInfo.INTERFACE_METHOD_REF;
     }
 
+    @Override
     public String getClassName() {
         return getClassName(classIndex);
     }
 
 
+    @Override
     public Pair<String, String> getNameAndDescriptor() {
         return ((NameAndTypeInfo) myCP.get(nameAndTypeIndex)).getNameAndDescriptor();
     }

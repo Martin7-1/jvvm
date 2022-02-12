@@ -33,6 +33,7 @@ public class ClassInfo extends ConstantPoolInfo {
     public ClassInfo(ConstantPool constantPool, int nameIndex){
         super(constantPool);
         this.nameIndex = nameIndex;
+        super.tag = ConstantPoolInfo.CLASS;
     }
 
     /**
