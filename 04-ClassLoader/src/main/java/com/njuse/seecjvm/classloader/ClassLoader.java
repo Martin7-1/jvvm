@@ -86,9 +86,8 @@ public class ClassLoader {
      * load superclass before add to method area
      */
     private void resolveSuperClass(JClass clazz) throws ClassNotFoundException {
-        String objectClassName = "java/lang/Object";
         // 递归加载父类, 注意只有java.lang.Object是没有父类的
-        if (!objectClassName.equals(clazz.getName())) {
+        if (!JClass.OBJECT_CLASS_NAME.equals(clazz.getName())) {
             String superClassName = clazz.getSuperClassName();
             EntryType initiatingEntry = clazz.getLoadEntryType();
             clazz.setSuperClass(loadClass(superClassName, initiatingEntry));

@@ -7,6 +7,9 @@ import lombok.Setter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * @author Zyi
+ */
 @Getter
 @Setter
 public class MethodArea {
@@ -17,6 +20,9 @@ public class MethodArea {
     }
 
     @Setter @Getter
+    /**
+     * key值是class的名称，value是对应的class
+     */
     private static Map<String, JClass> classMap;
 
     public static MethodArea getInstance() {

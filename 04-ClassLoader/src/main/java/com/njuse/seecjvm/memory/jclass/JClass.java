@@ -10,6 +10,9 @@ import com.njuse.seecjvm.runtime.Vars;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * @author Zyi
+ */
 @Getter
 @Setter
 public class JClass {
@@ -28,10 +31,16 @@ public class JClass {
     private Vars staticVars;
     private InitState initState;
 
+    /**
+     * 此字段只是为了方便特殊情况的调用，并非模拟真实的class文件中的字段
+     */
+    public static final String OBJECT_CLASS_NAME = "java/lang/Object";
+
     public JClass(ClassFile classFile) {
+
         this.accessFlags = classFile.getAccessFlags();
         this.name = classFile.getClassName();
-        if (!this.name.equals("java/lang/Object")) {
+        if (!OBJECT_CLASS_NAME.equals(this.name)) {
             // index of super class of java/lang/Object is 0
             this.superClassName = classFile.getSuperClassName();
         } else {
