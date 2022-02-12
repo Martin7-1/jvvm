@@ -13,7 +13,6 @@ import com.njuse.seecjvm.memory.jclass.runtimeConstantPool.constant.wrapper.Floa
 import com.njuse.seecjvm.memory.jclass.runtimeConstantPool.constant.wrapper.IntWrapper;
 import com.njuse.seecjvm.memory.jclass.runtimeConstantPool.constant.wrapper.LongWrapper;
 import com.njuse.seecjvm.runtime.Vars;
-import com.njuse.seecjvm.runtime.struct.JObject;
 import com.njuse.seecjvm.runtime.struct.NullObject;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -126,7 +125,6 @@ public class ClassLoader {
     }
 
     private void prepare(JClass clazz) {
-        //todo
         /**
          * Add some codes here.
          *
@@ -195,7 +193,6 @@ public class ClassLoader {
      * ref type is set to null
      */
     private void initDefaultValue(JClass clazz, Field field) {
-        //todo
         /**
          * Add some codes here.
          * step 1
@@ -242,7 +239,6 @@ public class ClassLoader {
      * String is not support now
      */
     private void loadValueFromRTCP(JClass clazz, Field field) {
-        //todo
         /**
          * Add some codes here.
          *
@@ -297,7 +293,6 @@ public class ClassLoader {
         clazz.setStaticVars(new Vars(clazz.getStaticSlotCount()));
         Field[] fields = clazz.getFields();
         for (Field f : fields) {
-            //todo
             /**
              * Add some codes here.
              *

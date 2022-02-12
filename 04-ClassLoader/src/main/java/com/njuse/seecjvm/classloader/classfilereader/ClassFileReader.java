@@ -77,20 +77,6 @@ public class ClassFileReader {
     public Pair<byte[], Integer> readClassFile(String className, EntryType privilege) throws IOException, ClassNotFoundException {
         String realClassName = className + ".class";
         realClassName = PathUtil.transform(realClassName);
-        // todo
-        /**
-         * Add some codes here.
-         *
-         * You can pass realClassName to readClass()
-         *
-         * Read class file in privilege order
-         * USER_ENTRY has the highest privileges and Boot_Entry has the lowest privileges.
-         * If there is no relevant class loaded before, use default privilege.
-         * Default privilege is USER_ENTRY
-         *
-         * Return the result once you read it.
-         */
-
         // 默认是USER_ENTRY
         int value = privilege == null ? EntryType.USER_ENTRY : privilege.getValue();
         byte[] data;

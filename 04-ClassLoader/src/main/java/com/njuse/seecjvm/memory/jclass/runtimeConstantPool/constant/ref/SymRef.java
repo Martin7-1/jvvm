@@ -7,15 +7,20 @@ import com.njuse.seecjvm.memory.jclass.runtimeConstantPool.constant.Constant;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * @author Zyi
+ */
 @Getter
 @Setter
 public abstract class SymRef implements Constant {
     public RuntimeConstantPool runtimeConstantPool;
-    public String className;    //format : java/lang/Object
+    /**
+     * format : java/lang/Object
+     */
+    public String className;
     public JClass clazz;
 
-    public void resolveClassRef() throws ClassNotFoundException {
-        //todo
+    public void resolveClassRef() throws ClassNotFoundException, IllegalAccessException {
         /**
          * Add some codes here.
          *
@@ -33,5 +38,14 @@ public abstract class SymRef implements Constant {
          * Check the permission and throw IllegalAccessException
          * Don't forget to set the value of clazz with loaded class
          */
+        // step1: 验证C是否对D可见
+        JClass D = runtimeConstantPool.getClazz();
+        JClass C = ClassLoader.getInstance().loadClass(this.className, D.getLoadEntryType());
+        if (!C.isAccessibleTo(D)) {
+            // 如果C对D不可见
+            throw new IllegalAccessException();
+        }
+
+        this.clazz = C;
     }
 }

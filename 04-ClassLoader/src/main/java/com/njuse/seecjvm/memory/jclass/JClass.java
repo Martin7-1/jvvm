@@ -87,12 +87,19 @@ public class JClass {
         return 0 != (this.accessFlags & AccessFlags.ACC_PUBLIC);
     }
 
+    /**
+     *
+     * @param caller
+     * @return
+     */
     public boolean isAccessibleTo(JClass caller) {
-        //todo
         /**
          * Add some codes here.
          * Refer to jvm specification 5.4.4
          */
-        return false;
+        // C对D可见当且仅当下面的条件之一成立
+        //   1. C是public的
+        //   2. C和D处于同一个运行时包下面
+        return isPublic() || getPackageName().equals(caller.getPackageName());
     }
 }
