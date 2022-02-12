@@ -3,9 +3,10 @@ package com.njuse.seecjvm.classloader.classfileparser.constantpool.info;
 import com.njuse.seecjvm.classloader.classfileparser.constantpool.ConstantPool;
 
 
+/**
+ * @author Zyi
+ */
 public class ClassInfo extends ConstantPoolInfo {
-
-
     /**
      * Add some codes here.
      *
@@ -45,7 +46,8 @@ public class ClassInfo extends ConstantPoolInfo {
          * Add some codes here.
          * tips: classname is in UTF8Info
          */
-        return "";
+
+        return null;
     }
 
     @Override

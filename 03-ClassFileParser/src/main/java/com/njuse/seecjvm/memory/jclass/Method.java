@@ -28,7 +28,12 @@ public class Method extends ClassMember {
         }
         argc = calculateArgcFromDescriptor(descriptor);
     }
-    //todo calculateArgcFromDescriptor
+
+    /**
+     * todo calculateArgcFromDescriptor
+     * @param descriptor 方法描述符
+     * @return 参数列表长度 argc
+     */
     private int calculateArgcFromDescriptor(String descriptor) {
         /**
          * Add some codes here.
@@ -38,7 +43,36 @@ public class Method extends ClassMember {
          *
          * Beware of long and double type
          */
+        int startIndex = 0;
+        int len = descriptor.length();
+        int argc = 0;
 
-        return 0;
+        while (startIndex < len) {
+            switch (descriptor.charAt(startIndex)) {
+                case 'B':
+                case 'C':
+                case 'F':
+                case 'I':
+                case 'L':
+                case 'S':
+                case 'Z':
+                    argc += 1;
+                    startIndex++;
+                    break;
+                case 'D':
+                case 'J':
+                    if (descriptor.charAt(startIndex + 1) != '[') {
+                        argc += 2;
+                        startIndex++;
+                    } else {
+                        argc += 1;
+                        startIndex += 2;
+                    }
+                    break;
+                default:
+            }
+        }
+
+        return argc;
     }
 }

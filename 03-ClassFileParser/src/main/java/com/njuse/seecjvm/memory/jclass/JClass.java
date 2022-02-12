@@ -10,6 +10,9 @@ import com.njuse.seecjvm.runtime.Vars;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * @author Zyi
+ */
 @Getter
 @Setter
 public class JClass {
