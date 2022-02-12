@@ -67,8 +67,11 @@ public class JClass {
 
     public String getPackageName() {
         int index = name.lastIndexOf('/');
-        if (index >= 0) return name.substring(0, index);
-        else return "";
+        if (index >= 0) {
+            return name.substring(0, index);
+        } else {
+            return "";
+        }
     }
 
     public boolean isPublic() {

@@ -74,15 +74,11 @@ public class ClassLoader {
     private JClass defineClass(byte[] data, EntryType definingEntry) throws ClassNotFoundException {
         ClassFile classFile = new ClassFile(data);
         JClass clazz = new JClass(classFile);
-        //todo
-        /**
-         * Add some codes here.
-         *
-         * update load entry of the class
-         * load superclass recursively
-         * load interfaces of this class
-         * add to method area
-         */
+        clazz.setLoadEntryType(definingEntry);
+        this.resolveSuperClass(clazz);
+        this.resolveInterfaces(clazz);
+        // add to method area
+        this.methodArea.addClass(clazz.getName(), clazz);
         return clazz;
     }
 
@@ -90,24 +86,28 @@ public class ClassLoader {
      * load superclass before add to method area
      */
     private void resolveSuperClass(JClass clazz) throws ClassNotFoundException {
-        //todo
-        /**
-         * Add some codes here.
-         *
-         * Use the load entry(defining entry) as initiating entry of super class
-         */
+        String objectClassName = "java/lang/Object";
+        // 递归加载父类, 注意只有java.lang.Object是没有父类的
+        if (!objectClassName.equals(clazz.getName())) {
+            String superClassName = clazz.getSuperClassName();
+            EntryType initiatingEntry = clazz.getLoadEntryType();
+            clazz.setSuperClass(loadClass(superClassName, initiatingEntry));
+        }
+
     }
 
     /**
      * load interfaces before add to method area
      */
     private void resolveInterfaces(JClass clazz) throws ClassNotFoundException {
-        //todo
-        /**
-         * Add some codes here.
-         *
-         * Use the load entry(defining entry) as initiating entry of interfaces
-         */
+        String[] interfacesName = clazz.getInterfaceNames();
+        EntryType initiatingEntry = clazz.getLoadEntryType();
+        int len = interfacesName.length;
+        JClass[] interfaces = new JClass[len];
+        for (int i = 0; i < len; i++) {
+            interfaces[i] = this.loadClass(interfacesName[i], initiatingEntry);
+        }
+        clazz.setInterfaces(interfaces);
     }
 
     /**
@@ -155,7 +155,9 @@ public class ClassLoader {
             if (!f.isStatic()) {
                 f.setSlotID(slotID);
                 slotID++;
-                if (f.isLongOrDouble()) slotID++;
+                if (f.isLongOrDouble()) {
+                    slotID++;
+                }
             }
         }
         clazz.setInstanceSlotCount(slotID);
