@@ -33,11 +33,11 @@ public class ClassLoaderTest {
 
     @Test
     public void load1() throws ClassNotFoundException {
-        Set<String> expectedClasses = new LinkedHashSet<>(Arrays.asList("java/lang/Object","testsrc/InterfaceParent", "testsrc/Parent", "testsrc/InterfaceChild", "testsrc/Child"));
-        ClassFileReader.setUserClasspath(String.join(File.separator,testPath,"user","test1"));
-        loader.loadClass("testsrc/Child",null);
+        Set<String> expectedClasses = new LinkedHashSet<>(Arrays.asList("java/lang/Object", "testsrc/InterfaceParent", "testsrc/Parent", "testsrc/InterfaceChild", "testsrc/Child"));
+        ClassFileReader.setUserClasspath(String.join(File.separator, testPath, "user", "test1"));
+        loader.loadClass("testsrc/Child", null);
         Set<String> realClasses = MethodArea.getClassMap().keySet();
-        verify(expectedClasses,realClasses);
+        verify(expectedClasses, realClasses);
     }
 
     @Test

@@ -81,11 +81,11 @@ public class ClassFileReader {
         int value = privilege == null ? EntryType.USER_ENTRY : privilege.getValue();
         byte[] data;
 
-        if (value > EntryType.BOOT_ENTRY && (data = bootClasspath.readClass(realClassName)) != null ) {
+        if (value >= EntryType.BOOT_ENTRY && (data = bootClasspath.readClass(realClassName)) != null ) {
             return Pair.of(data, EntryType.BOOT_ENTRY);
-        } else if (value > EntryType.EXT_ENTRY && (data = extClasspath.readClass(realClassName)) != null) {
+        } else if (value >= EntryType.EXT_ENTRY && (data = extClasspath.readClass(realClassName)) != null) {
             return Pair.of(data, EntryType.EXT_ENTRY);
-        } else if (value > EntryType.USER_ENTRY && (data = userClasspath.readClass(realClassName)) != null) {
+        } else if (value >= EntryType.USER_ENTRY && (data = userClasspath.readClass(realClassName)) != null) {
             return Pair.of(data, EntryType.USER_ENTRY);
         } else {
             // can not find the class
