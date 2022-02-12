@@ -27,8 +27,8 @@ public class ClassFileParserTest {
     @Test
     public void parseObjectClass(){
         String className = "LocalObject";
-        byte[] content=null;
-        ClassFile classfile=null;
+        byte[] content = null;
+        ClassFile classfile = null;
 
         try {
             content = classFileReader.readClassFile(className,null).getKey();

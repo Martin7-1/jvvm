@@ -22,13 +22,20 @@ public class ClassInfo extends ConstantPoolInfo {
     //todo attibute of ClassInfo
 
 
-    //todo constructor of ClassInfo
+    /**
+     * todo constructor of ClassInfo
+      *@param constantPool 常量池
+     * @param nameIndex 名称索引
+     */
     public ClassInfo(ConstantPool constantPool, int nameIndex){
 
         super(constantPool);
     }
 
-    //todo getClassName
+    /**
+     * todo getClassName
+     * @return class name
+     */
     public String getClassName() {
         /**
          * Add some codes here.
@@ -39,7 +46,6 @@ public class ClassInfo extends ConstantPoolInfo {
 
     @Override
     public String toString() {
-
         return getClassName();
     }
 }

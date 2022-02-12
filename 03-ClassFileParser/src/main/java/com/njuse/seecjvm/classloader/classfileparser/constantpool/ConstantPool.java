@@ -11,6 +11,7 @@ public class ConstantPool {
         constantPool.infos = new ConstantPoolInfo[constantPoolCnt];
         int currentOfs = offset;
         int entryCnt = 0;
+
         while (entryCnt < constantPoolCnt - 1) {
             Pair<ConstantPoolInfo, Integer> infoInt = ConstantPoolInfo.getConstantPoolInfo(constantPool, in, currentOfs);
             ConstantPoolInfo info = infoInt.getKey();
@@ -18,6 +19,7 @@ public class ConstantPool {
             entryCnt += info.getEntryLength();
             currentOfs += infoInt.getValue();
         }
+
         return Pair.of(constantPool, currentOfs - offset);
     }
 
