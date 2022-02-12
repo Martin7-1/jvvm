@@ -3,6 +3,7 @@ package com.njuse.seecjvm.classloader.classfilereader.classpath;
 /**
  * the number presents different privileges of entry
  * The larger the number, the higher the privileges
+ * @author Zyi
  */
 public class EntryType {
     private int value;
