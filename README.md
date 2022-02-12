@@ -77,15 +77,55 @@ Class loader of ArrayList:null
 
 我们知道，Java Class都是由`java.lang.ClassLoader`这个类来负责加载的，那么问题是：`java.lang.ClassLoader`这个类是由谁来加载的呢？
 
-这时候就是Bootstap Class Loader来发挥作用的时候，该类加载器主要负责的是JDK内部的类，一般是`rt.jar`和在 $JAVA\_HOME/jre/lib$ 目录下的类，同时，该类加载器也是其他类加载器的“**父类**”
+这时候就是Bootstap Class Loader来发挥作用的时候，该类加载器主要负责的是JDK内部的类，一般是`rt.jar`和在 <JAVA_HOME>/jre/lib 目录下的类，同时，该类加载器也是其他类加载器的“**父类**”
 
 
 
 #### 2.1.2 Extension Class Loader
 
-Extension Class Loader是Bootstrap Class Loader的子类（非`Java`中的继承），
+Extension Class Loader是Bootstrap Class Loader的子类（非`Java`中的继承），主要负责的是对标准Java库之外的扩展类进行类加载，一般加载的是 <JAVA_HOME>/lib/ext目录下的类
 
 
 
-### Parent Delegation Model
+#### 2.1.3 Application Class Loader
 
+Application Class Loader主要负责加载的是应用级别的类，即在我们自定义的classpath下来进行类加载，在用`javac`进行编译的时候，我们可以通过`-cp/-classpath`来自行指定classpath。该类加载器是Extension Class Loader的子类
+
+
+
+![](https://s2.loli.net/2022/02/12/5hlTNzDrbeun2Lm.png)
+
+> 图源：南京大学软件工程2019级软件工程与计算I大作业手册
+
+
+
+### 2.2 Load Class
+
+类加载器在对类进行Java的流程可以大致简述如下：
+
+1. JVM需要加载某个类的时候，通过`java.lang.ClassLoader.loadClass()`方法来通过**某个类的全限定名**在运行时加载该类。
+2. 首先检查这个类是否被加载，如果这个类还没有被加载的话，会将任务委派给父类加载器，并不断递归进行
+3. 当最顶层的类加载器（此时没有父类，无法继续递归）并没有在自己的classpath中找到该类的话，会向下委派。
+4. 收到上层委派的类加载器会通过`java.net.URLClassLoader.findClass()`来在文件系统中查找对应要加载的类
+5. 如果到了最下层的类加载器都没有找到所需的类，那么就会抛出`java.lang.ClassNotFoundException`或者`java.lang.NoClassDefFoundError`
+
+
+
+如果我们查看某个`ClassNotFoundException`的例子：
+
+```java
+java.lang.ClassNotFoundException: com.baeldung.classloader.SampleClassLoader    
+    at java.net.URLClassLoader.findClass(URLClassLoader.java:381)    
+    at java.lang.ClassLoader.loadClass(ClassLoader.java:424)    
+    at java.lang.ClassLoader.loadClass(ClassLoader.java:357)    
+    at java.lang.Class.forName0(Native Method)    
+    at java.lang.Class.forName(Class.java:348)
+```
+
+我们会发现其过程就是按照我们上述所说的步骤来进行的。接下来我们会详细介绍这个过程中很重要的一个机制：双亲委派机制（Parent Delegation Model），也就是上文步骤中两次出现的**“委派”**二字
+
+
+
+#### 2.2.1 Parent Delegation Model
+
+> 双亲委派模型
