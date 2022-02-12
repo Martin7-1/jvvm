@@ -15,11 +15,13 @@ public class FieldrefInfo extends MemberRefInfo {
     }
 
 
+    @Override
     public String getClassName() {
         return getClassName(classIndex);
     }
 
 
+    @Override
     public Pair<String, String> getNameAndDescriptor() {
         return ((NameAndTypeInfo) myCP.get(nameAndTypeIndex)).getNameAndDescriptor();
 

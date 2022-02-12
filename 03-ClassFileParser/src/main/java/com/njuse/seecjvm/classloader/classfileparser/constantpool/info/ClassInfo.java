@@ -19,8 +19,11 @@ public class ClassInfo extends ConstantPoolInfo {
      *      super method and super key word will help you
      */
 
-    //todo attibute of ClassInfo
-
+    /**
+     * todo attribute of ClassInfo
+     * class info的结构由tag + nameIndex构成，其中tag的值是7
+     */
+    private int nameIndex;
 
     /**
      * todo constructor of ClassInfo
@@ -28,8 +31,8 @@ public class ClassInfo extends ConstantPoolInfo {
      * @param nameIndex 名称索引
      */
     public ClassInfo(ConstantPool constantPool, int nameIndex){
-
         super(constantPool);
+        this.nameIndex = nameIndex;
     }
 
     /**

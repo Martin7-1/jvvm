@@ -43,7 +43,8 @@ public class ConstantPoolInfo {
                  * todo complete the missing code of ClassInfo
                  * Add some codes here.
                  */
-                ret = null;
+                ret = new ClassInfo(constantPool, in.getU2());
+                bytesRead += 2;
                 break;
             case FIELD_REF: {
                 ret = new FieldrefInfo(constantPool, in.getU2(), in.getU2());
