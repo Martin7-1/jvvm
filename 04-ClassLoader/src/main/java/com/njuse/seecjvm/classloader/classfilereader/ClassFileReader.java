@@ -9,6 +9,7 @@ import java.io.IOException;
 
 /**
  * This class is the simulated implementation of Java Classloader.
+ * @author Zyi
  */
 public class ClassFileReader {
     private static ClassFileReader reader = new ClassFileReader();
@@ -18,13 +19,26 @@ public class ClassFileReader {
     private ClassFileReader() {
     }
 
+    /**
+     * 单例模式
+     * @return ClassFileReader instance
+     */
     public static ClassFileReader getInstance() {
         return reader;
     }
 
-    private static Entry bootClasspath = null;//bootstrap class entry
-    private static Entry extClasspath = null;//extension class entry
-    private static Entry userClasspath = null;//user class entry
+    /**
+     * bootstrap class entry
+     */
+    private static Entry bootClasspath = null;
+    /**
+     * extension class entry
+     */
+    private static Entry extClasspath = null;
+    /**
+     * user class entry
+     */
+    private static Entry userClasspath = null;
 
     public static void setBootClasspath(String classpath) {
         bootClasspath = chooseEntryType(classpath);
@@ -63,6 +77,7 @@ public class ClassFileReader {
     public Pair<byte[], Integer> readClassFile(String className, EntryType privilege) throws IOException, ClassNotFoundException {
         String realClassName = className + ".class";
         realClassName = PathUtil.transform(realClassName);
+
         //todo
         /**
          * Add some codes here.
@@ -70,12 +85,17 @@ public class ClassFileReader {
          * You can pass realClassName to readClass()
          *
          * Read class file in privilege order
-         * USER_ENTRY has highest privileges and Boot_Entry has lowest privileges.
+         * USER_ENTRY has the highest privileges and Boot_Entry has the lowest privileges.
          * If there is no relevant class loaded before, use default privilege.
          * Default privilege is USER_ENTRY
          *
          * Return the result once you read it.
          */
+        // 根据权限来判断启用哪一种类加载器
+        if (privilege.getValue() == EntryType.USER_ENTRY) {
+            // 最高权限
+        }
+
         throw new ClassNotFoundException();
     }
 }
