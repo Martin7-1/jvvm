@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -49,7 +50,13 @@ public class UTF8Info extends ConstantPoolInfo {
         super(constantPool);
         this.length = length;
         this.bytes = bytes;
+        setString();
         super.tag = ConstantPoolInfo.UTF8;
+    }
+
+    private void setString() {
+        // 将bytes数组变成一个String
+        this.myString = new String(bytes, StandardCharsets.UTF_8);
     }
 
     /**
@@ -58,6 +65,7 @@ public class UTF8Info extends ConstantPoolInfo {
      */
     // todo getInstance
     static Pair<UTF8Info, Integer> getInstance(ConstantPool constantPool, byte[] in, int offset) {
+        // 获得一个UTF8Info和对应的string长度，我们可以直接通过length来得到，即getU2()
         return null;
     }
 
