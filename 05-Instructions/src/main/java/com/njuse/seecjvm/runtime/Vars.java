@@ -5,6 +5,9 @@ import com.njuse.seecjvm.runtime.struct.Slot;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * @author Zyi
+ */
 @Getter
 @Setter
 public class Vars {
@@ -49,21 +52,30 @@ public class Vars {
     }
 
     /**
-     * TODO：将一个long类型的变量写入局部变量表
      * @param index 变量的起始下标
      * @param value 变量的值
      */
     public void setLong(int index, long value) {
-
+        if (index < 0 || index >= maxSize) {
+            throw new IndexOutOfBoundsException();
+        }
+        // 设置Long时，要注意此时需要用到两格slot
+        // 低4字节存储在局部变量表中较低的slot中
+        int high4Bytes = (int) (value >> 32);
+        int low4Bytes = (int) value;
+        varSlots[index].setValue(low4Bytes);
+        varSlots[index + 1].setValue(high4Bytes);
     }
 
     /**
-     * TODO：从局部变量表读取一个long类型变量
      * @param index 变量的起始下标
      * @return 变量的值
      */
     public long getLong(int index) {
-        return 233333L;
+        int low4Bytes = varSlots[index].getValue();
+        int high4Bytes = varSlots[index + 1].getValue();
+
+        return (((long) high4Bytes) << 32) + low4Bytes;
     }
 
     public void setDouble(int index, double value) {
