@@ -16,7 +16,7 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
 public class ClassFileParserTest {
-    public static final String TEST_JAR_PATH = String.join(File.separator,"src","test","testjar");
+    public static final String TEST_JAR_PATH = String.join(File.separator,"src", "test", "testjar");
     public static ClassFileReader classFileReader = ClassFileReader.getInstance();
 
     @Before
@@ -32,13 +32,13 @@ public class ClassFileParserTest {
 
         try {
             content = classFileReader.readClassFile(className,null).getKey();
-            assert  content!=null;
+            assert content != null;
             classfile = new ClassFile(content);
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        assert classfile!=null;
-        assertEquals(51,classfile.getThisClass());
+        assert classfile != null;
+        assertEquals(51, classfile.getThisClass());
         assertEquals(0, classfile.getSuperClass());
         assertEquals(0, classfile.getInterfacesCount());
         assertEquals("java/lang/Object", classfile.getClassName());
@@ -49,7 +49,7 @@ public class ClassFileParserTest {
         String[] expectedMethods = getExpectMethods(className);
         List<String> realMethods = Arrays.stream(clazz.getMethods())
                 .map(m->m.getDescriptor()+" "+m.getName()+" "+m.getArgc()+" "+m.getMaxLocal()+" "+m.getMaxStack()).collect(Collectors.toList());
-        for (String m:expectedMethods){
+        for (String m : expectedMethods){
             assertTrue(realMethods.contains(m));
         }
     }
@@ -85,7 +85,7 @@ public class ClassFileParserTest {
         String[] expectedFields = new String[]{"value","hash","serialVersionUID","serialPersistentFields","CASE_INSENSITIVE_ORDER"};
         List<String> realFields = Arrays.stream(clazz.getFields())
                 .map(Field::getName).collect(Collectors.toList());
-        for(String f:expectedFields){
+        for(String f : expectedFields){
             assertTrue(realFields.contains(f));
         }
         //method name

@@ -43,36 +43,54 @@ public class Method extends ClassMember {
          *
          * Beware of long and double type
          */
+        // 首先我们需要得到参数列表的范围
         int startIndex = 0;
-        int len = descriptor.length();
+        while (descriptor.charAt(startIndex) != '(') {
+            startIndex++;
+        }
+        int endIndex = startIndex + 1;
+        while (descriptor.charAt(endIndex) != ')') {
+            endIndex++;
+        }
         int argc = 0;
+        int index = startIndex;
 
-        while (startIndex < len) {
-            switch (descriptor.charAt(startIndex)) {
+        while (index < endIndex) {
+            switch (descriptor.charAt(index)) {
                 case 'B':
                 case 'C':
                 case 'F':
                 case 'I':
-                case 'L':
                 case 'S':
                 case 'Z':
                     argc += 1;
-                    startIndex++;
                     break;
                 case 'D':
                 case 'J':
-                    if (descriptor.charAt(startIndex + 1) != '[') {
+                    if (descriptor.charAt(index + 1) != '[') {
                         argc += 2;
-                        startIndex++;
                     } else {
                         argc += 1;
-                        startIndex += 2;
                     }
                     break;
+                case 'L':
+                    // todo: 让index指向分号
+                    argc += 1;
+                    index = calIndex(descriptor, index);
                 default:
             }
+            index++;
         }
 
         return argc;
+    }
+
+    private int calIndex(String descriptor, int index) {
+        int newIndex = index;
+        while (descriptor.charAt(newIndex) != ';') {
+            newIndex++;
+        }
+
+        return newIndex;
     }
 }

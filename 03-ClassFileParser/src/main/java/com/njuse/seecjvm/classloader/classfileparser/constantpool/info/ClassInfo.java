@@ -46,8 +46,9 @@ public class ClassInfo extends ConstantPoolInfo {
          * Add some codes here.
          * tips: classname is in UTF8Info
          */
-
-        return null;
+        // 常量池在nameIndex索引的一个UTF-8 info就是class name
+        UTF8Info utf8Info = (UTF8Info) this.myCP.get(this.nameIndex);
+        return utf8Info.getString();
     }
 
     @Override
