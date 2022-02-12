@@ -13,6 +13,7 @@ import com.njuse.seecjvm.memory.jclass.runtimeConstantPool.constant.wrapper.Floa
 import com.njuse.seecjvm.memory.jclass.runtimeConstantPool.constant.wrapper.IntWrapper;
 import com.njuse.seecjvm.memory.jclass.runtimeConstantPool.constant.wrapper.LongWrapper;
 import com.njuse.seecjvm.runtime.Vars;
+import com.njuse.seecjvm.runtime.struct.JObject;
 import com.njuse.seecjvm.runtime.struct.NullObject;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -137,6 +138,13 @@ public class ClassLoader {
          * step3
          *      set the init state
          */
+        // step1
+        calInstanceFieldSlotIDs(clazz);
+        calStaticFieldSlotIDs(clazz);
+        // step2
+        allocAndInitStaticVars(clazz);
+        // step3
+        clazz.setInitState(InitState.PREPARED);
     }
 
     /**
@@ -174,11 +182,12 @@ public class ClassLoader {
             if (f.isStatic()) {
                 f.setSlotID(slotID);
                 slotID++;
-                if (f.isLongOrDouble()) slotID++;
+                if (f.isLongOrDouble()) {
+                    slotID++;
+                }
             }
         }
         clazz.setStaticSlotCount(slotID);
-
     }
 
     /**
@@ -197,6 +206,35 @@ public class ClassLoader {
          *      switch by descriptor or some part of descriptor
          *      Handle basic type ZBCSIJDF and references (with new NullObject())
          */
+        Vars vars = clazz.getStaticVars();
+        int slotID = field.getSlotID();
+        String descriptor = field.getDescriptor();
+
+        // 通过descriptor确定这个字段的类型，然后设置默认值
+        // 默认值设置如下:
+        //   1. 整数类型: byte/short/int/long/char 默认值为0，其中char也可以表示为'\u0000'
+        //   2. 浮点类型: float/double 默认值为正数0，即0.0f和0.0d
+        //   3. 布尔类型: boolean 默认值为false
+        switch (descriptor.charAt(0)) {
+            case 'I':
+            case 'S':
+            case 'C':
+            case 'B':
+            case 'Z':
+                vars.setInt(slotID, 0);
+                break;
+            case 'J':
+                vars.setLong(slotID, 0L);
+                break;
+            case 'F':
+                vars.setFloat(slotID, 0.0f);
+                break;
+            case 'D':
+                vars.setDouble(slotID, 0.0d);
+                break;
+            default:
+                vars.setObjectRef(slotID, new NullObject());
+        }
     }
 
     /**
@@ -220,6 +258,35 @@ public class ClassLoader {
          *  Example
          *      long longVal = ((LongWrapper) runtimeConstantPool.getConstant(constantPoolIndex)).getValue();
          */
+        Vars vars = clazz.getStaticVars();
+        RuntimeConstantPool runtimeConstantPool = clazz.getRuntimeConstantPool();
+        int slotID = field.getSlotID();
+        int constantValueIndex = field.getConstValueIndex();
+        String descriptor = field.getDescriptor();
+
+        switch (descriptor.charAt(0)) {
+            case 'I':
+            case 'S':
+            case 'C':
+            case 'B':
+            case 'Z':
+                int intVal = ((IntWrapper) runtimeConstantPool.getConstant(constantValueIndex)).getValue();
+                vars.setInt(slotID, intVal);
+                break;
+            case 'J':
+                long longVal = ((LongWrapper) runtimeConstantPool.getConstant(constantValueIndex)).getValue();
+                vars.setLong(slotID, longVal);
+                break;
+            case 'F':
+                float floatVal = ((FloatWrapper) runtimeConstantPool.getConstant(constantValueIndex)).getValue();
+                vars.setFloat(slotID, floatVal);
+                break;
+            case 'D':
+                double doubleVal = ((DoubleWrapper) runtimeConstantPool.getConstant(constantValueIndex)).getValue();
+                vars.setDouble(slotID, 0.0d);
+                break;
+            default:
+        }
     }
 
     /**
@@ -236,6 +303,12 @@ public class ClassLoader {
              *
              * Refer to manual for details.
              */
+            // 注意常量会在准备阶段就被初始化为初始值，且该初始值是从运行时常量池(Runtime Constant Pool)中读取的
+            if (f.isStatic() && f.isFinal()) {
+                loadValueFromRTCP(clazz, f);
+            } else {
+                initDefaultValue(clazz, f);
+            }
         }
     }
 }

@@ -16,6 +16,7 @@ public class MethodArea {
     private static MethodArea methodArea = new MethodArea();
 
     private MethodArea() {
+        // LinkedHashMap: 有序的表
         classMap = new LinkedHashMap<>();
     }
 
