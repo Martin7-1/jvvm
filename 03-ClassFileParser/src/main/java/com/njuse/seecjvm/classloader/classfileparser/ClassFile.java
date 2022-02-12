@@ -11,6 +11,9 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.nio.ByteBuffer;
 import java.util.function.Supplier;
 
+/**
+ * @author Zyi
+ */
 @Getter
 @Setter
 public class ClassFile {
@@ -31,16 +34,22 @@ public class ClassFile {
     private short attributeCount;
     private AttributeInfo[] attributes;
 
+    /**
+     * ByteBuffer的作用是用来作为缓冲区读取classfile的内容
+     */
     private ByteBuffer in;
     Supplier<AttributeInfo> attrBuilder = this::getAttribute;
 
     public ClassFile(byte[] classfile) {
         in = ByteBuffer.wrap(classfile);
+        // magic number是一个u4
         this.magic = in.getInt();
         if (this.magic != 0xCAFEBABE) {
+            // 类的魔数
             throw new UnsupportedOperationException(
                     "Wrong magic number! Expect 0xCAFEBABE but actual is " + Integer.toHexString(this.magic));
         }
+        // 主版本号和副版本号都是u2
         this.minorVersion = in.getShort();
         this.majorVersion = in.getShort();
         /** todo set this.thisClass
@@ -49,16 +58,22 @@ public class ClassFile {
          * You should complete the missing code of ClassInfo and UTF8Info
          * when parse constant pool
          */
+        // parse constant pool
         parseConstantPool(classfile);
+        // accessFlag u2
         this.accessFlags = in.getShort();
 
+        // thisClass u2
+        this.thisClass = in.getShort();
+        // superClass u2
+        this.superClass = in.getShort();
 
         /**
          * todo call parseinterfaces
          * Add some codes here.
          * You should read thisClass superClass interfaceCount and then parse interfaces correctly
          */
-
+        parseInterfaces();
 
         parseFields();
         parseMethods();
@@ -91,12 +106,15 @@ public class ClassFile {
         }
     }
 
-    //todo parseInterfaces
+    /**
+     * todo parseInterfaces
+     */
     private void parseInterfaces() {
-        /**
-         * Add some codes here.
-         */
-
+        this.interfacesCount = in.getShort();
+        this.interfaces = new short[0xFFFF & this.interfacesCount];
+        for (int i = 0; i < this.interfaces.length; i++) {
+            this.interfaces[i] = in.getShort();
+        }
     }
 
     private void parseConstantPool(byte[] classfile) {
