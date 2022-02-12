@@ -25,13 +25,12 @@ public class LDC extends Index8Instruction {
         if (constant instanceof IntWrapper) {
             //TODO 如果这个元素是IntWrapper， insert your code here
 
-        }
-        else if (constant instanceof FloatWrapper) {
+        } else if (constant instanceof FloatWrapper) {
             //TODO 如果这个元素是FloatWrapper， insert your code here
 
+        } else {
+            throw new ClassFormatError();
         }
-
-        else throw new ClassFormatError();
 
     }
 }

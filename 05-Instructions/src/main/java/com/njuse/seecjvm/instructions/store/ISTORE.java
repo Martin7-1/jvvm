@@ -5,7 +5,6 @@ import com.njuse.seecjvm.runtime.StackFrame;
 
 public class ISTORE extends Index8Instruction {
 
-
     /**
      * TODO：实现这条指令
      */

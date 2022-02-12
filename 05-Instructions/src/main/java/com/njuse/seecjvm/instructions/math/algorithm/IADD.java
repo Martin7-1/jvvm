@@ -7,7 +7,6 @@ import com.njuse.seecjvm.runtime.StackFrame;
 public class IADD extends NoOperandsInstruction {
 
     /**
-     * TODO：实现这条指令
      * 这是一个已完成的例子
      */
     @Override

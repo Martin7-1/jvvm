@@ -11,11 +11,13 @@ import java.util.Stack;
 public class ThreadStack {
     private static int maxSize;
     private Stack<StackFrame> stack;
-    private Stack<Boolean> frameState;//true present frame is new added
+    // true present frame is new added
+    private Stack<Boolean> frameState;
     private int currentSize;
 
     static {
-        maxSize = 64 * 1024;//use linux x86_64 default value 256KB
+        //use linux x86_64 default value 256KB
+        maxSize = 64 * 1024;
     }
 
     public ThreadStack() {
@@ -46,7 +48,9 @@ public class ThreadStack {
     }
 
     public StackFrame getTopFrame() {
-        if (currentSize == 0) return null;
+        if (currentSize == 0) {
+            return null;
+        }
         return stack.lastElement();
     }
 }
