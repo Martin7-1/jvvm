@@ -122,10 +122,29 @@ java.lang.ClassNotFoundException: com.baeldung.classloader.SampleClassLoader
     at java.lang.Class.forName(Class.java:348)
 ```
 
-我们会发现其过程就是按照我们上述所说的步骤来进行的。接下来我们会详细介绍这个过程中很重要的一个机制：双亲委派机制（Parent Delegation Model），也就是上文步骤中两次出现的**“委派”**二字
+我们会发现其过程就是按照我们上述所说的步骤来进行的。接下来我们会详细介绍这个过程中很重要的一个机制：双亲委派机制（Parent Delegation Model），也就是上文步骤中两次出现的“**委派**”二字
 
 
 
 #### 2.2.1 Parent Delegation Model
 
 > 双亲委派模型
+
+简单来说，双亲委派模型的流程可以用一句话解释：当JVM需要加载某个class时，底层的类加载器会将任务委派给它的父类加载器，只有在父类加载器无法加载该类的时候，底层的类加载器才会来尝试加载该类。
+
+举个例子：当我们有一个加载application class到JVM的请求，首先Application Class Loader会将请求委派给其父类Extension Class Loader，然后Extension Class Loader会向上委派给Bootstrap Class Loader。
+
+此时Bootstrap Class Loader已经没有父加载器了，所以会开始尝试加载需要的类，当它加载失败时会告知Extension Class Loader，然后由Extension Class Loader来尝试加载该类，加载失败后会告知Application Class Loader，最后由Application Class Loader来加载该类。
+
+
+
+#### 2.2.2 Visibility
+
+不同类加载器之间的类具有可见性。子类加载器对其父类加载器加载的类是可见的（**children class loaders are visible to classes loaded by their parent class loaders**）。
+
+举个例子，现在我们有一个由Application Class Loader加载的类A，和一个由Extension Class Loader加载的类B，则无论A或者B都是Application Class Loader可见的，但对于Extension Class Loader来说只有类B可见
+
+
+
+### 2.3 自定义Classloader
+
