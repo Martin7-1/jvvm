@@ -104,6 +104,11 @@ public class ConstantPoolInfo {
                  * todo complete the missing code of UTF8Info
                  * Add some codes here.
                  */
+                // 这里可以通过UTF8Info.getInstance()来获得一个Pair
+                // 其中key是UTF8Info
+                // value是UTF8Info中的String的长度
+
+                // 或者通过以下的方法，直接得到
                 int length = in.getU2();
                 byte[] bytes = new byte[length];
                 for (int i = 0; i < length; i++) {
