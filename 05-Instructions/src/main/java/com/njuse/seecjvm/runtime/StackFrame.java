@@ -4,6 +4,10 @@ import com.njuse.seecjvm.memory.jclass.Method;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * 栈帧
+ * @author Zyi
+ */
 @Getter
 @Setter
 public class StackFrame {

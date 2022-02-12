@@ -3,7 +3,10 @@ package com.njuse.seecjvm.instructions.base;
 import java.nio.ByteBuffer;
 
 public abstract class Index8Instruction extends Instruction {
-    public int index;//type of index is unsigned char
+    /**
+     * type of index is unsigned char
+     */
+    public int index;
 
     @Override
     public void fetchOperands(ByteBuffer reader) {

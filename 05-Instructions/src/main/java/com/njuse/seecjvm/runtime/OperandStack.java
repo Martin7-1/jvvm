@@ -13,6 +13,9 @@ import java.util.EmptyStackException;
 @Getter
 @Setter
 public class OperandStack {
+    /**
+     * top指向的是栈顶的一个 空闲 位置
+     */
     private int top;
     private int maxStackSize;
     private Slot[] slots;
@@ -36,7 +39,7 @@ public class OperandStack {
         if (top >= maxStackSize) {
             throw new StackOverflowError();
         }
-        slots[++top].setValue(value);
+        slots[top++].setValue(value);
     }
 
     /**
