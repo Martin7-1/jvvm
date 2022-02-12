@@ -77,8 +77,7 @@ public class ClassFileReader {
     public Pair<byte[], Integer> readClassFile(String className, EntryType privilege) throws IOException, ClassNotFoundException {
         String realClassName = className + ".class";
         realClassName = PathUtil.transform(realClassName);
-
-        //todo
+        // todo
         /**
          * Add some codes here.
          *
@@ -91,11 +90,20 @@ public class ClassFileReader {
          *
          * Return the result once you read it.
          */
-        // 根据权限来判断启用哪一种类加载器
-        if (privilege.getValue() == EntryType.USER_ENTRY) {
-            // 最高权限
-        }
 
-        throw new ClassNotFoundException();
+        // 默认是USER_ENTRY
+        int value = privilege == null ? EntryType.USER_ENTRY : privilege.getValue();
+        byte[] data;
+
+        if (value > EntryType.BOOT_ENTRY && (data = bootClasspath.readClass(realClassName)) != null ) {
+            return Pair.of(data, EntryType.BOOT_ENTRY);
+        } else if (value > EntryType.EXT_ENTRY && (data = extClasspath.readClass(realClassName)) != null) {
+            return Pair.of(data, EntryType.EXT_ENTRY);
+        } else if (value > EntryType.USER_ENTRY && (data = userClasspath.readClass(realClassName)) != null) {
+            return Pair.of(data, EntryType.USER_ENTRY);
+        } else {
+            // can not find the class
+            throw new ClassNotFoundException();
+        }
     }
 }
