@@ -5,7 +5,10 @@ import com.njuse.seecjvm.runtime.StackFrame;
 
 import java.nio.ByteBuffer;
 
-
+/**
+ * 
+ * @author Zyi
+ */
 public class INVOKE_INTERFACE extends Index16Instruction {
 
     /**
