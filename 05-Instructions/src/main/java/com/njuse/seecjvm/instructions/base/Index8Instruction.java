@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 public abstract class Index8Instruction extends Instruction {
     /**
      * type of index is unsigned char
+     * 在LocalVars(局部变量表)中的索引
      */
     public int index;
 
