@@ -34,15 +34,13 @@ public class INVOKE_VIRTUAL extends Index16Instruction {
         frame.getThread().pushFrame(newFrame);
 
         if (method.isNative()) {
-            if (method.getName().equals("registerNatives")) {
-                frame.getThread().popFrame();
-            } else {
+            if (!"registerNatives".equals(method.getName())) {
                 System.out.println("Native method:"
                         + method.getClazz().getName()
                         + method.name
                         + method.descriptor);
-                frame.getThread().popFrame();
             }
+            frame.getThread().popFrame();
         }
     }
 
