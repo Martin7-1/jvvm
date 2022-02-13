@@ -12,13 +12,14 @@ public class DCMPG extends NoOperandsInstruction {
 
     @Override
     public void execute(StackFrame frame) {
-        double value1 = frame.getOperandStack().popDouble();
+        // 栈是后入先出结构, 即value2会先被pop, value1后被pop
         double value2 = frame.getOperandStack().popDouble();
+        double value1 = frame.getOperandStack().popDouble();
 
         if (Double.isNaN(value1) || Double.isNaN(value2)) {
             frame.getOperandStack().pushInt(1);
         } else {
-            frame.getOperandStack().pushDouble(Double.compare(value1, value2));
+            frame.getOperandStack().pushInt(Double.compare(value1, value2));
         }
     }
 }

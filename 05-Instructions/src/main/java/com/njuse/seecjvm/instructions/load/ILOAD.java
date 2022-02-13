@@ -15,7 +15,7 @@ public class ILOAD extends Index8Instruction {
      */
     @Override
     public void execute(StackFrame frame) {
-        long value = frame.getLocalVars().getLong(index);
-        frame.getOperandStack().pushLong(value);
+        int value = frame.getLocalVars().getInt(index);
+        frame.getOperandStack().pushInt(value);
     }
 }

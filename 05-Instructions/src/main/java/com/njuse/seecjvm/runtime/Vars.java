@@ -23,6 +23,11 @@ public class Vars {
         }
     }
 
+    /**
+     * 设置局部变量表某个索引的元素
+     * @param index 索引
+     * @param value 变量的值
+     */
     public void setInt(int index, int value) {
         if (index < 0 || index >= maxSize) {
             throw new IndexOutOfBoundsException();
