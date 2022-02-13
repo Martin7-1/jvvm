@@ -24,7 +24,7 @@ public abstract class IF_ICMPCOND extends BranchInstruction {
         int value2 = frame.getOperandStack().popInt();
         int value1 = frame.getOperandStack().popInt();
         if (condition(value1, value2)) {
-            frame.setNextPC(frame.getNextPC() - 3 + offset);
+            frame.setNextPC(frame.getNextPC() - INSTR_LENGTH + offset);
         }
     }
 

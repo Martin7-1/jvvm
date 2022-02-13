@@ -11,6 +11,7 @@ public abstract class BranchInstruction extends Instruction {
      * 偏移量
      */
     protected int offset;
+    public static final int INSTR_LENGTH = 3;
 
     @Override
     public void fetchOperands(ByteBuffer reader) {

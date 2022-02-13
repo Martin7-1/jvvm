@@ -20,7 +20,7 @@ public class GOTO extends BranchInstruction {
 
         // 3 = opcode + signed short offset
         // opcode: 1byte, signed short offset: 由两个byte组成
-        int branchPC = frame.getNextPC() - 3 + super.offset;
+        int branchPC = frame.getNextPC() - INSTR_LENGTH + super.offset;
         //设置PC为跳转后地址
         frame.setNextPC(branchPC);
     }
