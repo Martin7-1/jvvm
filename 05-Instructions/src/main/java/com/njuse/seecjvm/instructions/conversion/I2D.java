@@ -8,7 +8,7 @@ import com.njuse.seecjvm.runtime.StackFrame;
  * convert int to double
  * @author Zyi
  */
-public class I2D extends NoOperandsInstruction {
+public class I2D extends NoOperandsInstruction implements Convertable {
 
     /**
      * 这是一条可选测试用例才会涉及的指令
@@ -18,6 +18,11 @@ public class I2D extends NoOperandsInstruction {
         // int 转化为 double 然后push到操作数栈中
         OperandStack operandStack = frame.getOperandStack();
         int value = operandStack.popInt();
-        operandStack.pushDouble((double) value);
+        operandStack.pushDouble(value);
+    }
+
+    @Override
+    public int convert(int value) {
+        return 0;
     }
 }

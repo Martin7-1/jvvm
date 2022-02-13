@@ -8,7 +8,7 @@ import com.njuse.seecjvm.runtime.StackFrame;
  * convert int to short
  * @author Zyi
  */
-public class I2S extends NoOperandsInstruction {
+public class I2S extends NoOperandsInstruction implements Convertable {
 
     /**
      * 这是一条可选测试用例才会涉及的指令
@@ -20,8 +20,14 @@ public class I2S extends NoOperandsInstruction {
         // int 转化为 short 然后push到操作数栈中
         OperandStack operandStack = frame.getOperandStack();
         int value = operandStack.popInt();
+        int shortVal = convert(value);
+        operandStack.pushInt(shortVal);
+    }
+
+    @Override
+    public int convert(int value) {
         int shortVal = value << 16;
         shortVal >>= 16;
-        operandStack.pushInt(shortVal);
+        return shortVal;
     }
 }
