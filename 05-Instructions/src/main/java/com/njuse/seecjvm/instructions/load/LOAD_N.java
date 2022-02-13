@@ -3,6 +3,7 @@ package com.njuse.seecjvm.instructions.load;
 import com.njuse.seecjvm.instructions.base.NoOperandsInstruction;
 
 public abstract class LOAD_N extends NoOperandsInstruction {
+
     protected int index;
     private static int[] valid = {0, 1, 2, 3};
 
