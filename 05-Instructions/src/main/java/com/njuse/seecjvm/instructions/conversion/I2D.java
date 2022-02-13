@@ -18,7 +18,8 @@ public class I2D extends NoOperandsInstruction implements Convertable {
         // int 转化为 double 然后push到操作数栈中
         OperandStack operandStack = frame.getOperandStack();
         int value = operandStack.popInt();
-        operandStack.pushDouble(value);
+        double doubleValue = (double) value;
+        operandStack.pushDouble(doubleValue);
     }
 
     @Override

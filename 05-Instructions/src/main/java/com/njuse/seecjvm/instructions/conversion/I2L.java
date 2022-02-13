@@ -18,7 +18,8 @@ public class I2L extends NoOperandsInstruction implements Convertable {
         // int 转化为 long 然后push到操作数栈中
         OperandStack operandStack = frame.getOperandStack();
         int value = operandStack.popInt();
-        operandStack.pushLong((long) value);
+        long longValue = (long) value;
+        operandStack.pushLong(longValue);
     }
 
     @Override

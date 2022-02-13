@@ -18,7 +18,8 @@ public class I2F extends NoOperandsInstruction implements Convertable {
         // int 转化为 float 然后push到操作数栈中
         OperandStack operandStack = frame.getOperandStack();
         int value = operandStack.popInt();
-        operandStack.pushFloat((float) value);
+        float floatValue = (float) value;
+        operandStack.pushFloat(floatValue);
     }
 
     @Override

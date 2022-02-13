@@ -18,16 +18,12 @@ public class I2B extends NoOperandsInstruction implements Convertable {
         // 将int转化成byte, 然后32位符号扩展后push到操作数栈中
         OperandStack operandStack = frame.getOperandStack();
         int value = operandStack.popInt();
-        operandStack.pushInt(convert(value));
+        int byteVal = (byte) value;
+        operandStack.pushInt(byteVal);
     }
-
 
     @Override
     public int convert(int value) {
-        // 32位左移24位变成8位
-        int byteVal = value << 24;
-        // 然后再向右符号右移24位，Java中符号右移是>>, 无符号右移是>>>
-        byteVal >>= 24;
-        return byteVal;
+        return (byte) value;
     }
 }

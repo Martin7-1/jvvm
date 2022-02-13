@@ -18,7 +18,7 @@ public class I2C extends NoOperandsInstruction implements Convertable {
         // int转化为char, 然后32位无符号扩展后push到操作数栈
         OperandStack operandStack = frame.getOperandStack();
         int value = operandStack.popInt();
-        int charVal = convert(value);
+        int charVal = (char) value;
         operandStack.pushInt(charVal);
     }
 

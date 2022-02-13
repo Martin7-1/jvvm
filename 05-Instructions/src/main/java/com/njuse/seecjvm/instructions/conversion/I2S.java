@@ -20,7 +20,7 @@ public class I2S extends NoOperandsInstruction implements Convertable {
         // int 转化为 short 然后push到操作数栈中
         OperandStack operandStack = frame.getOperandStack();
         int value = operandStack.popInt();
-        int shortVal = convert(value);
+        int shortVal = (short) value;
         operandStack.pushInt(shortVal);
     }
 
