@@ -8,6 +8,7 @@ import java.nio.ByteBuffer;
 public abstract class BranchInstruction extends Instruction {
     /**
      * type of offset is signed short
+     * 偏移量
      */
     protected int offset;
 
