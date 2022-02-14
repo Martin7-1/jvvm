@@ -16,7 +16,10 @@ public class JHeap {
     private static Set<JObject> objects;
     private static int maxSize = 50;
     private static int currentSize = 0;
-    private static Map<Integer, Boolean> objectState;//true to present object is new added
+    /**
+     * true to present object is new added, false otherwise
+     */
+    private static Map<Integer, Boolean> objectState;
 
     public static JHeap getInstance() {
         return jHeap;
@@ -28,7 +31,9 @@ public class JHeap {
     }
 
     public void addObj(JObject obj) {
-        if (currentSize >= maxSize) throw new OutOfMemoryError();
+        if (currentSize >= maxSize) {
+            throw new OutOfMemoryError();
+        }
         objects.add(obj);
         objectState.put(obj.getId(), true);
         currentSize++;

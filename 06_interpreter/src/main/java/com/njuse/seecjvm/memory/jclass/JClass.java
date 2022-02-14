@@ -16,28 +16,50 @@ import lombok.Setter;
 import java.util.HashMap;
 import java.util.Optional;
 
+/**
+ * 模拟classfile文件
+ * @author Zyi
+ */
 @Getter
 @Setter
 public class JClass {
+    /**
+     * 访问标志，判断类或接口
+     */
     private short accessFlags;
     private String name;
     private String superClassName;
     private String[] interfaceNames;
+    /**
+     * 运行时常量池
+     */
     private RuntimeConstantPool runtimeConstantPool;
-    private Field[] fields;//
-    private Method[] methods;//
+    /**
+     * 字段表
+     */
+    private Field[] fields;
+    /**
+     * 方法表
+     */
+    private Method[] methods;
+    /**
+     * 类加载优先级，用来判断需要可以使用哪一种类加载器
+     */
     private EntryType loadEntryType;
     private JClass superClass;
     private JClass[] interfaces;
     private int instanceSlotCount;
     private int staticSlotCount;
     private Vars staticVars;
+    /**
+     * 用来标志是否已经初始化
+     */
     private InitState initState;
 
     public JClass(ClassFile classFile) {
         this.accessFlags = classFile.getAccessFlags();
         this.name = classFile.getClassName();
-        if (!this.name.equals("java/lang/Object")) {
+        if (!"java/lang/Object".equals(this.name)) {
             // index of super class of java/lang/Object is 0
             this.superClassName = classFile.getSuperClassName();
         } else {

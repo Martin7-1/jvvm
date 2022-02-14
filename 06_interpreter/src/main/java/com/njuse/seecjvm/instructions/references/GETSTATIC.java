@@ -11,6 +11,7 @@ import com.njuse.seecjvm.runtime.StackFrame;
 import com.njuse.seecjvm.runtime.Vars;
 
 public class GETSTATIC extends Index16Instruction {
+
     @Override
     public void execute(StackFrame frame) {
         RuntimeConstantPool runtimeConstantPool = frame.getMethod().getClazz().getRuntimeConstantPool();
