@@ -178,17 +178,53 @@ Java虚拟机中，**方法区（Method Area）**是可供各个线程共享的�
 
 ## 2 ClassFile
 
-### Magic Number
+每个`class`文件对应的`ClassFile`结构如下所示：
 
-### Minor Version
+* `Magic Number` -- 魔数
+* `minor_version` -- 次版本号
+* `major_version` -- 主版本号
+* `constant_pool_count` -- 常量池计数器
+* `constant_pool[]` -- 常量池
+* `access_flags` -- 访问标志
+* `this_class` -- 类索引
+* `super_class` -- 父类索引
+* `interfaces_count` -- 接口计数器
+* `interfaces[]` -- 接口表
+* `fields_count` -- 字段计数器
+* `fields[]` -- 字段表
+* `methods_count` -- 方法计数器
+* `methods[]` -- 方法表
+* `attributes_count` -- 属性计数器
+* `attributes[]` -- 属性表
 
-### Major Version
+Class 文件是二进制文件，它的内容具有严格的规范，文件中没有任何空格，全都是连续的 0/1。Class 文件 中的所有内容被分为两种类型：无符号数、表。
 
-### Constant Pool Count
+- 无符号数 无符号数表示 Class 文件中的值，这些值没有任何类型，但有不同的长度。u1、u2、u4、u8 分别代表 1/2/4/8 字节的无符号数。
+- 表 由多个无符号数或者其他表作为数据项构成的复合数据类型。
 
-### Constant Pool
 
-### Access Flags
+
+### 2.1 Magic
+
+魔数的唯一作用就是确定这个文件是不是一个能够被虚拟机接受的`.class`文件。魔数的固定值是16进制表示下的`0xCAFEBABE`。即在类加载的时候，如果`.class`文件的开始四个byte不是魔数，那么就代表该`.class`文件不是一个规范的class文件，不能够被虚拟机所接受
+
+
+
+### 2.2 minor_version/major_version
+
+这两个无符号数代表class文件的副、主版本号。我们假设`major_version = M`，`minor_version = m`，则这个class文件的格式版本号就确定为`M.m`。对某个JDK来说，它所能支持的版本号处于一个范围之间，如果class文件的格式版本号不在JDK所支持的版本号之间的话，虚拟机无法运行该class文件
+
+
+
+### 2.3 constant_pool
+
+常量池是一种表结构，它包含了class文件结构及其子结构中引用的**所有字符串常量、类或接口名、字段名和其他常量**。其大小由之前的一个2个byte的`constant_pool_count`约束，即常量池的索引是从0 - `constant_pool_count - 1`为范围的。在这之中，一般第一个字节是类型标记，用来确定该项的格式（这在后面的所有表结构中都是一样的），我们将这个字节叫做`tag byte`，简称`tag`
+
+
+
+### 2.4 access_flags
+
+
 
 
 
