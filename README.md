@@ -206,13 +206,13 @@ Class 文件是二进制文件，它的内容具有严格的规范，文件中�
 
 ### 2.1 Magic
 
-魔数的唯一作用就是确定这个文件是不是一个能够被虚拟机接受的`.class`文件。魔数的固定值是16进制表示下的`0xCAFEBABE`。即在类加载的时候，如果`.class`文件的开始四个byte不是魔数，那么就代表该`.class`文件不是一个规范的class文件，不能够被虚拟机所接受
+**魔数**的唯一作用就是确定这个文件是不是一个能够被虚拟机接受的`.class`文件。魔数的固定值是16进制表示下的`0xCAFEBABE`。即在类加载的时候，如果`.class`文件的开始四个byte不是魔数，那么就代表该`.class`文件不是一个规范的class文件，不能够被虚拟机所接受
 
 
 
 ### 2.2 minor_version/major_version
 
-这两个无符号数代表class文件的副、主版本号。我们假设`major_version = M`，`minor_version = m`，则这个class文件的格式版本号就确定为`M.m`。对某个JDK来说，它所能支持的版本号处于一个范围之间，如果class文件的格式版本号不在JDK所支持的版本号之间的话，虚拟机无法运行该class文件
+这两个无符号数代表class文件的**副、主版本号**。我们假设`major_version = M`，`minor_version = m`，则这个class文件的格式版本号就确定为`M.m`。对某个JDK来说，它所能支持的版本号处于一个范围之间，如果class文件的格式版本号不在JDK所支持的版本号之间的话，虚拟机无法运行该class文件
 
 
 
@@ -223,6 +223,40 @@ Class 文件是二进制文件，它的内容具有严格的规范，文件中�
 
 
 ### 2.4 access_flags
+
+access_flags是用来表示某个类或者接口的访问权限以及属性，其具有以下几种标志和含义：
+
+|     标志名     |   值   |                        含义                         |
+| :------------: | :----: | :-------------------------------------------------: |
+|   ACC_PUBLIC   | 0x0001 |            声明为public，可以从包外访问             |
+|   ACC_FINAL    | 0X0010 |              声明为final，不允许有子类              |
+|   ACC_SUPER    | 0X0020 | 当用到invokespecial指令时，需要对父类方法做特殊处理 |
+| ACC_INTERFACE  | 0X0200 |           该class文件定义的是接口而不是类           |
+|  ACC_ABSTRACT  | 0X0400 |             声明为抽象类，不能被实例化              |
+| ACC_SYNTHETIC  | 0X1000 |        表示该class文件并非由Java源代码所生成        |
+| ACC_ANNOTATION | 0X2000 |                    标识注解类型                     |
+|    ACC_ENUM    | 0x4000 |                    标识枚举类型                     |
+
+> Java虚拟机规范中说明：“特殊处理”是相对JDK 1.0.2之前的class文件而言的，invokespecial的语义、处理方式在JDK 1.0.2时发生了改变，为避免二义性，在 JDK 1.0.2 之后编译出的class文件都带有ACC_SUPER 标志用以区分
+
+对于这些访问标志，有一些注意事项：
+
+* 设置了`ACC_INTERFACE`标志的class文件也要同时设置`ACC_ABSTRACT`标志。同时不能设置`ACC_FIANL`，`ACC_SUPER`，`ACC_ENUM`标志
+* 如果没有设置`ACC_INTERFACE`标志，那么这个class文件可以具有除了注解类型之外的其他所有标志，`ACC_FIANL`和`ACC_ABSTRACT`这种互斥的不能同时存在。
+* Java SE 8及后续版本，无论class文件的标志实际值是什么，Java虚拟机都认为每个class文件设置了`ACC_SUPER`标志。
+* 如果设置了`ACC_ANNOTATION`标志，那么也必须设置`ACC_INTERFACE`标志
+
+其他没有涉及到的值是为了未来扩充而预留的，这些预留标志在编译器中设置为0，Java虚拟机实现也应该忽略其它的值
+
+
+
+### 2.5 this_class
+
+`this_class`的值必须是对常量池表中某项的一个有效索引值。常量池在这个索引处的成员必须为`Constant_Class_info`类型结构体，该结构体表示这个class文件所定义的类或接口
+
+
+
+### 2.6 super_class
 
 
 
@@ -363,3 +397,4 @@ java.lang.ClassNotFoundException: com.baeldung.classloader.SampleClassLoader
 1. Java虚拟机规范 第8版
 2. 深入理解Java虚拟机：JVM高级特性与最佳实践
 3. [JVM底层原理最全知识总结](https://doocs.github.io/jvm/)
+3. 

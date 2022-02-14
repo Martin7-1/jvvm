@@ -22,7 +22,7 @@ public class INVOKE_SPECIAL extends Index16Instruction {
 
         JClass c;
         if (frame.getMethod().getClazz().isAccSuper()
-                && !method.getName().equals("<init>")) {
+                && !"<init>".equals(method.getName())) {
             c = frame.getMethod().getClazz().getSuperClass();
         } else {
             c = method.getClazz();

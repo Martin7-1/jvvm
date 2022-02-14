@@ -10,6 +10,9 @@ import com.njuse.seecjvm.runtime.Vars;
 import com.njuse.seecjvm.runtime.struct.JObject;
 import com.njuse.seecjvm.runtime.struct.Slot;
 
+/**
+ * @author Zyi
+ */
 public class INVOKE_VIRTUAL extends Index16Instruction {
     @Override
     public void execute(StackFrame frame) {
