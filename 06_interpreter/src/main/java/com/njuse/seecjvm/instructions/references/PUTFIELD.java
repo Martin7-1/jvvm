@@ -56,60 +56,63 @@ public class PUTFIELD extends Index16Instruction {
 
             String descriptor = field.getDescriptor();
             int slotID = field.getSlotID();
-            // 这里这个ref直接设置成非数组类型是由指令描述所保证的
-            NonArrayObject ref;
-            JObject tempRef;
-
-            switch (descriptor.charAt(0)) {
-                case 'B':
-                case 'C':
-                case 'I':
-                case 'S':
-                case 'Z':
-                    // <= 32位的数据类型
-                    int value = operandStack.popInt();
-                    // 首先检查下一个pop出的是不是一个非数组类型的对象
-                    tempRef = operandStack.popObjectRef();
-                    checkRef(tempRef);
-                    ref = (NonArrayObject) tempRef;
-                    ref.getFields().setInt(slotID, value);
-                    break;
-                case 'F':
-                    float floatValue = operandStack.popFloat();
-                    tempRef = operandStack.popObjectRef();
-                    checkRef(tempRef);
-                    ref = (NonArrayObject) tempRef;
-                    ref.getFields().setFloat(slotID, floatValue);
-                    break;
-                case 'J':
-                    long longValue = operandStack.popLong();
-                    tempRef = operandStack.popObjectRef();
-                    checkRef(tempRef);
-                    ref = (NonArrayObject) tempRef;
-                    ref.getFields().setLong(slotID, longValue);
-                    break;
-                case 'D':
-                    double doubleValue = operandStack.popDouble();
-                    tempRef = operandStack.popObjectRef();
-                    checkRef(tempRef);
-                    ref = (NonArrayObject) tempRef;
-                    ref.getFields().setDouble(slotID, doubleValue);
-                    break;
-                case '[':
-                    // 数组类型，do nothing
-                    // 这里break或者不break都可以，会到checkRef来抛出异常
-                case 'L':
-                    // 引用类型
-                    JObject refValue = operandStack.popObjectRef();
-                    tempRef = operandStack.popObjectRef();
-                    checkRef(tempRef);
-                    ref = (NonArrayObject) tempRef;
-                    ref.getFields().setObjectRef(slotID, refValue);
-                    break;
-                default:
-            }
+            resolveDescriptor(descriptor, operandStack, slotID);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void resolveDescriptor(String descriptor, OperandStack operandStack, int slotID) {
+        // 这里这个ref直接设置成非数组类型是由指令描述所保证的
+        NonArrayObject ref;
+        JObject tempRef;
+
+        switch (descriptor.charAt(0)) {
+            case 'B':
+            case 'C':
+            case 'I':
+            case 'S':
+            case 'Z':
+                // <= 32位的数据类型
+                int value = operandStack.popInt();
+                // 首先检查下一个pop出的是不是一个非数组类型的对象
+                tempRef = operandStack.popObjectRef();
+                checkRef(tempRef);
+                ref = (NonArrayObject) tempRef;
+                ref.getFields().setInt(slotID, value);
+                break;
+            case 'F':
+                float floatValue = operandStack.popFloat();
+                tempRef = operandStack.popObjectRef();
+                checkRef(tempRef);
+                ref = (NonArrayObject) tempRef;
+                ref.getFields().setFloat(slotID, floatValue);
+                break;
+            case 'J':
+                long longValue = operandStack.popLong();
+                tempRef = operandStack.popObjectRef();
+                checkRef(tempRef);
+                ref = (NonArrayObject) tempRef;
+                ref.getFields().setLong(slotID, longValue);
+                break;
+            case 'D':
+                double doubleValue = operandStack.popDouble();
+                tempRef = operandStack.popObjectRef();
+                checkRef(tempRef);
+                ref = (NonArrayObject) tempRef;
+                ref.getFields().setDouble(slotID, doubleValue);
+                break;
+            case '[':
+                // 数组类型，do nothing
+                // 这里break或者不break都可以，会到checkRef来抛出异常
+            case 'L':
+                // 引用类型
+                JObject refValue = operandStack.popObjectRef();
+                tempRef = operandStack.popObjectRef();
+                ref = (NonArrayObject) tempRef;
+                ref.getFields().setObjectRef(slotID, refValue);
+                break;
+            default:
         }
     }
 
