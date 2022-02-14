@@ -11,6 +11,7 @@ import com.njuse.seecjvm.runtime.struct.JObject;
 import com.njuse.seecjvm.runtime.struct.Slot;
 
 public class INVOKE_SPECIAL extends Index16Instruction {
+
     @Override
     public void execute(StackFrame frame) {
         //noinspection Duplicates

@@ -8,6 +8,7 @@ import com.njuse.seecjvm.instructions.control.IRETURN;
 import com.njuse.seecjvm.instructions.control.RETURN;
 import com.njuse.seecjvm.instructions.invoke.INVOKE_INTERFACE;
 import com.njuse.seecjvm.instructions.invoke.INVOKE_SPECIAL;
+import com.njuse.seecjvm.instructions.invoke.INVOKE_STATIC;
 import com.njuse.seecjvm.instructions.invoke.INVOKE_VIRTUAL;
 import com.njuse.seecjvm.instructions.load.ALOAD_N;
 import com.njuse.seecjvm.instructions.load.ILOAD;
@@ -93,8 +94,7 @@ public class Decoder {
         opMap.put(OpCode.PUTFIELD, new PUTFIELD());
         opMap.put(OpCode.INVOKEVIRTUAL, new INVOKE_VIRTUAL());
         opMap.put(OpCode.INVOKESPECIAL, new INVOKE_SPECIAL());
-        //TODO: 插入 invoke static
-
+        opMap.put(OpCode.INVOKESTATIC, new INVOKE_STATIC());
         opMap.put(OpCode.INVOKEINTERFACE, new INVOKE_INTERFACE());
         opMap.put(OpCode.NEW_, new NEW());
 

@@ -20,7 +20,6 @@ import java.nio.ByteBuffer;
 public class INVOKE_INTERFACE extends Index16Instruction {
 
     /**
-     * TODO：实现这个方法
      * 这个方法用于读取这条指令操作码以外的部分
      */
     @Override
@@ -30,9 +29,6 @@ public class INVOKE_INTERFACE extends Index16Instruction {
         reader.get();
     }
 
-    /**
-     * TODO：实现这条指令
-     */
     @Override
     public void execute(StackFrame frame) {
         JClass curClazz = frame.getMethod().getClazz();
