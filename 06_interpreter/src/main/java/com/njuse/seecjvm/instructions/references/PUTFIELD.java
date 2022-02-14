@@ -81,7 +81,7 @@ public class PUTFIELD extends Index16Instruction {
                     ref = (NonArrayObject) tempRef;
                     ref.getFields().setFloat(slotID, floatValue);
                     break;
-                case 'L':
+                case 'J':
                     long longValue = operandStack.popLong();
                     tempRef = operandStack.popObjectRef();
                     checkRef(tempRef);
