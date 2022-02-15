@@ -8,6 +8,7 @@ import com.njuse.seecjvm.classloader.classfileparser.constantpool.ConstantPool;
 import com.njuse.seecjvm.classloader.classfilereader.classpath.EntryType;
 import com.njuse.seecjvm.memory.jclass.runtimeConstantPool.RuntimeConstantPool;
 import com.njuse.seecjvm.runtime.JThread;
+import com.njuse.seecjvm.runtime.StackFrame;
 import com.njuse.seecjvm.runtime.Vars;
 import com.njuse.seecjvm.runtime.struct.NonArrayObject;
 import lombok.Getter;
@@ -153,7 +154,7 @@ public class JClass {
      * Class Init Methods
      */
 
-    //if in multi-thread, jclass need a initstate lock
+    // if in multi-thread, jclass need a initstate lock
     private void initStart(JClass clazz) {
         clazz.initState = InitState.BUSY;
     }
@@ -167,14 +168,38 @@ public class JClass {
     }
 
     /**
-     * TODO 实现这个方法
      * 这个方法初始化了这个类的静态部分
+     *   1. 初始化所有静态变量
+     *   2. 初始化父类（非接口）
      */
     public void initClass(JThread thread, JClass clazz) {
-
+        initStart(clazz);
+        // 通过类构造器<cinit>来初始所有类变量（静态变量）
+        scheduleClinit(thread, clazz);
+        // 初始化父类
+        initSuperClass(thread, clazz);
+        initSucceed(clazz);
     }
 
+    private void scheduleClinit(JThread thread, JClass clazz) {
+        // 将<cinit>方法插入当前线程的栈帧
+        Method cinit = clazz.getCinitMethod();
+        if (cinit != null) {
+            StackFrame stackFrame = new StackFrame(thread, cinit, cinit.getMaxStack(), cinit.getMaxLocal());
+            thread.pushFrame(stackFrame);
+        }
+    }
 
+    private void initSuperClass(JThread thread, JClass clazz) {
+        // 接口初始化时不会引起父类的初始化
+        if (!clazz.isInterface()) {
+            JClass superClazz = clazz.getSuperClass();
+            if (superClazz != null && superClazz.getInitState() == InitState.PREPARED) {
+                // 父类已经解析完成准备好初始化
+                initClass(thread, superClazz);
+            }
+        }
+    }
 
     /**
      * search method in class and its superclass
@@ -194,12 +219,13 @@ public class JClass {
         return null;
     }
 
-
+    private Method getCinitMethod() {
+        return getMethodInClass("<cinit>", "()V", true);
+    }
 
     public Method getMainMethod() {
         return getMethodInClass("main", "([Ljava/lang/String;)V", true);
     }
-
 
     /**
      * Get extra Info
@@ -207,8 +233,11 @@ public class JClass {
 
     public String getPackageName() {
         int index = name.lastIndexOf('/');
-        if (index >= 0) return name.substring(0, index);
-        else return "";
+        if (index >= 0) {
+            return name.substring(0, index);
+        } else {
+            return "";
+        }
     }
 
     public boolean isPublic() {
@@ -232,15 +261,15 @@ public class JClass {
     }
 
     public boolean isJObjectClass() {
-        return this.name.equals("java/lang/Object");
+        return "java/lang/Object".equals(this.name);
     }
 
     public boolean isJlCloneable() {
-        return this.name.equals("java/lang/Cloneable");
+        return "java/lang/Cloneable".equals(this.name);
     }
 
     public boolean isJIOSerializable() {
-        return this.name.equals("java/io/Serializable");
+        return "java/io/Serializable".equals(this.name);
     }
 
     public boolean isAccessibleTo(JClass caller) {
@@ -249,11 +278,13 @@ public class JClass {
         return isPublic || inSamePackage;
     }
 
-    //refer to jvm8 6.5 instanceof inst
+    // refer to jvm8 6.5 instanceof inst
     public boolean isAssignableFrom(JClass other) {
         JClass s = other;
         JClass t = this;
-        if (s == t) return true;
+        if (s == t) {
+            return true;
+        }
         if (!s.isArray()) {
             if (!s.isInterface()) {
                 if (!t.isInterface()) {
@@ -286,7 +317,9 @@ public class JClass {
     private boolean isSubClassOf(JClass otherClass) {
         JClass superClass = this.getSuperClass();
         while (superClass != null) {
-            if (superClass == otherClass) return true;
+            if (superClass == otherClass) {
+                return true;
+            }
             superClass = superClass.getSuperClass();
         }
         return false;
@@ -296,7 +329,9 @@ public class JClass {
         JClass superClass = this;
         while (superClass != null) {
             for (JClass i : this.getInterfaces()) {
-                if (i == otherInterface || i.isSubInterfaceOf(otherInterface)) return true;
+                if (i == otherInterface || i.isSubInterfaceOf(otherInterface)) {
+                    return true;
+                }
             }
             superClass = this.getSuperClass();
         }
@@ -306,7 +341,9 @@ public class JClass {
     private boolean isSubInterfaceOf(JClass otherInterface) {
         JClass[] superInterfaces = this.getInterfaces();
         for (JClass i : superInterfaces) {
-            if (i == otherInterface || i.isSubInterfaceOf(otherInterface)) return true;
+            if (i == otherInterface || i.isSubInterfaceOf(otherInterface)) {
+                return true;
+            }
         }
         return false;
     }
