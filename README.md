@@ -6,6 +6,12 @@
 
 
 
+## 0 前提知识
+
+要学习Java虚拟机（Java Virtual Machine），您必须会**Java的基本语法**和**Java特性**
+
+
+
 ## 1 JVM内存结构
 
 Java虚拟机的内存空间由以下的五个部分组成：
@@ -178,6 +184,8 @@ Java虚拟机中，**方法区（Method Area）**是可供各个线程共享的�
 
 ## 2 ClassFile
 
+### 2.1 ClassFile文件格式
+
 每个`class`文件对应的`ClassFile`结构如下所示：
 
 * `Magic Number` -- 魔数
@@ -204,25 +212,25 @@ Class 文件是二进制文件，它的内容具有严格的规范，文件中�
 
 
 
-### 2.1 Magic
+#### 2.1.1 Magic
 
 **魔数**的唯一作用就是确定这个文件是不是一个能够被虚拟机接受的`.class`文件。魔数的固定值是16进制表示下的`0xCAFEBABE`。即在类加载的时候，如果`.class`文件的开始四个byte不是魔数，那么就代表该`.class`文件不是一个规范的class文件，不能够被虚拟机所接受
 
 
 
-### 2.2 minor_version/major_version
+#### 2.1.2 minor_version/major_version
 
 这两个无符号数代表class文件的**副、主版本号**。我们假设`major_version = M`，`minor_version = m`，则这个class文件的格式版本号就确定为`M.m`。对某个JDK来说，它所能支持的版本号处于一个范围之间，如果class文件的格式版本号不在JDK所支持的版本号之间的话，虚拟机无法运行该class文件
 
 
 
-### 2.3 constant_pool
+#### 2.1.3 constant_pool
 
 常量池是一种表结构，它包含了class文件结构及其子结构中引用的**所有字符串常量、类或接口名、字段名和其他常量**。其大小由之前的一个2个byte的`constant_pool_count`约束，即常量池的索引是从0 - `constant_pool_count - 1`为范围的。在这之中，一般第一个字节是类型标记，用来确定该项的格式（这在后面的所有表结构中都是一样的），我们将这个字节叫做`tag byte`，简称`tag`
 
 
 
-### 2.4 access_flags
+#### 2.1.4 access_flags
 
 access_flags是用来表示某个类或者接口的访问权限以及属性，其具有以下几种标志和含义：
 
@@ -250,15 +258,75 @@ access_flags是用来表示某个类或者接口的访问权限以及属性，�
 
 
 
-### 2.5 this_class
+#### 2.1.5 this_class
 
 `this_class`的值必须是对常量池表中某项的一个有效索引值。常量池在这个索引处的成员必须为`Constant_Class_info`类型结构体，该结构体表示这个class文件所定义的类或接口
 
 
 
-### 2.6 super_class
+#### 2.1.6 super_class
+
+**对于类来说**，`super_class`的值要么是0，要么是对常量池表某项的一个有效索引值。如果它的值不为0，那么常量池在这个索引处的成员必须为`Constant_Class_info`类型常量。它表示这个class文件所定义的类的<span style='color: red'>**直接超类**</span>。注意，该类的所有超类都不能够带有`ACC_FINAL`标志。
+
+> 这是因为标记为`ACC_FINAL`的类是不能够被继承的。
+
+如果class文件的`super_class`的值为0，那么这个class文件只可能用来表示`Object`类，因为在Java中，所有类都是间接继承`Object`类的，只有`Object`类是没有父类的。
+
+**而对于接口来说**，它的class文件的`super_class`项必须是对常量池表中某项的一个有效索引值。常量池在这个索引处的成员**必须**为代表`Object`类的`Constant_Class_info`结构
 
 
+
+#### 2.1.7 interfaces
+
+**接口表**的大小是由之前的一个2个byte的`interfaces_pool_count`约束，即常量池的索引是从0 - `interfaces_pool_count - 1`为范围的。接口表中每个成员的值都必须是对常量池表中某项的有效索引值。接口顺序和源代码中给定的接口顺序是一样的
+
+> 即：`class A implements B, C, D`。顺序就是`B, C, D`
+
+
+
+#### 2.1.8 fields
+
+首先介绍一下什么是**字段**：
+
+> Java中字段指的是一个类中的成员变量。比如如下代码：
+>
+> ```java
+> public class person {
+>     public String name;
+>     public int age;
+>     public boolean isMale;
+> }
+> ```
+>
+> 其中的`name`，`age`，`isMale`就是字段。
+
+**字段表**中的每个成员都必须是一个`fields_info`结构的数据项，用于表示当前类或接口中某个字段的完整描述。字段表描述当前类或者接口声明的所有字段，**但是不包括从父类或者父接口继承的字段**。
+
+> 这里的最后一句话为**初始化的步骤**留下了一个伏笔。
+
+**字段表**的大小是由之前的一个2个byte的`fields_pool_count`约束，即常量池的索引是从0 - `fields_pool_count - 1`为范围的。
+
+
+
+#### 2.1.9 methods
+
+**方法表**中的每一个成员都必须是一个`method_info`结构，用于表示当前类或接口中某个方法的完整描述。如果某个`method_info`结构的`access_flags`项既没有设置`ACC_NATIVE`标志也没有设置`ACC_ABSTRACT`标志，那么该结构中也应包含实现这个方法所用的Java虚拟机指令
+
+> `ACC_NATIVE`代表该方法是本地方法，本地方法不是用Java语言写的。`ACC_ABSTRACT`标志代表该方法是抽象方法，抽象方法没有具体内容。
+
+`method_info`结构可以表示类和结构中定义的所有方法，包括实例方法、类方法、实例初始化方法和类或接口初始化方法。接口表只描述当前类或接口中声明的方法，**不包括从父类或父接口继承的方法**
+
+**方法表**的大小是由之前的一个2个byte的`methods_pool_count`约束，即常量池的索引是从0 - `methods_pool_count - 1`为范围的。
+
+
+
+#### 2.1.10 attributes
+
+首先介绍一下什么是**属性**
+
+> 属性是**字段**的另一种术语，不同的是属性一般都是`public`的。
+
+属性表的每个项的值必须是`attribute_info`结构。
 
 
 
